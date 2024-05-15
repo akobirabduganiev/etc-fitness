@@ -1,10 +1,10 @@
-package com.alibou.book.config;
+package uz.etc.etcfitness.config;
 
-import com.alibou.book.user.User;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import uz.etc.etcfitness.user.User;
 
 import java.util.Optional;
 

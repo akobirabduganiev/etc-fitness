@@ -1,4 +1,4 @@
-package com.alibou.book.auth;
+package uz.etc.etcfitness.auth;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
@@ -23,7 +23,7 @@ public class RegistrationRequest {
     @Email(message = "Email is not well formatted")
     @NotEmpty(message = "Email is mandatory")
     @NotNull(message = "Email is mandatory")
-    private String email;
+    private String phone;
     @NotEmpty(message = "Password is mandatory")
     @NotNull(message = "Password is mandatory")
     @Size(min = 8, message = "Password should be 8 characters long minimum")

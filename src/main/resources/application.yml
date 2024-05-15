@@ -1,1 +1,13 @@
-spring.application.name=etc-fitness
+spring:
+  datasource:
+    username: postgres
+    url: jdbc:postgresql://localhost:5432/etc-fitness
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+    generate-ddl: true
+    database-platform: org.hibernate.dialect.PostgreSQLDialect

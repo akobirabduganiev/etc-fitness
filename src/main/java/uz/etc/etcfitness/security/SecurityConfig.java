@@ -1,4 +1,4 @@
-package com.alibou.book.security;
+package uz.etc.etcfitness.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

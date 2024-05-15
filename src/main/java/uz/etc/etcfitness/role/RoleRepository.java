@@ -1,4 +1,4 @@
-package com.alibou.book.role;
+package uz.etc.etcfitness.role;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

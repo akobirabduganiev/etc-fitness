@@ -1,4 +1,4 @@
-package com.alibou.book.user;
+package uz.etc.etcfitness.user;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

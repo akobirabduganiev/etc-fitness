@@ -1,4 +1,4 @@
-package com.alibou.book.auth;
+package uz.etc.etcfitness.auth;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;

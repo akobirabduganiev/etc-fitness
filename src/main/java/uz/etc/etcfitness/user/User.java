@@ -1,16 +1,6 @@
-package com.alibou.book.user;
+package uz.etc.etcfitness.user;
 
-import com.alibou.book.book.Book;
-import com.alibou.book.history.BookTransactionHistory;
-import com.alibou.book.role.Role;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,6 +12,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import uz.etc.etcfitness.role.Role;
 
 import java.security.Principal;
 import java.time.LocalDate;
@@ -39,7 +30,7 @@ import static jakarta.persistence.FetchType.EAGER;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "_user")
+@Table(name = "users")
 @EntityListeners(AuditingEntityListener.class)
 public class User implements UserDetails, Principal {
 
@@ -50,16 +41,12 @@ public class User implements UserDetails, Principal {
     private String lastname;
     private LocalDate dateOfBirth;
     @Column(unique = true)
-    private String email;
+    private String phone;
     private String password;
     private boolean accountLocked;
     private boolean enabled;
     @ManyToMany(fetch = EAGER)
     private List<Role> roles;
-    @OneToMany(mappedBy = "owner")
-    private List<Book> books;
-    @OneToMany(mappedBy = "user")
-    private List<BookTransactionHistory> histories;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
@@ -84,7 +71,7 @@ public class User implements UserDetails, Principal {
 
     @Override
     public String getUsername() {
-        return email;
+        return phone;
     }
 
     @Override
@@ -107,16 +94,12 @@ public class User implements UserDetails, Principal {
         return enabled;
     }
 
-    public String fullName() {
+    public String getFullName() {
         return getFirstname() + " " + getLastname();
     }
-
     @Override
     public String getName() {
-        return email;
+        return phone;
     }
 
-    public String getFullName() {
-        return firstname + " " + lastname;
-    }
 }

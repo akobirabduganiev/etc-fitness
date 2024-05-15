@@ -1,4 +1,4 @@
-package com.alibou.book.handler;
+package uz.etc.etcfitness.handler;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;

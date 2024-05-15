@@ -1,4 +1,4 @@
-package com.alibou.book.exception;
+package uz.etc.etcfitness.exception;
 
 public class OperationNotPermittedException extends RuntimeException {
 

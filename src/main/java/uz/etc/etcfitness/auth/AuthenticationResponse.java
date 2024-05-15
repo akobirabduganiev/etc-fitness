@@ -1,4 +1,4 @@
-package com.alibou.book.auth;
+package uz.etc.etcfitness.auth;
 
 import lombok.Builder;
 import lombok.Getter;

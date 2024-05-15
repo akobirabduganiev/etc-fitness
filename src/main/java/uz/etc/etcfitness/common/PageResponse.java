@@ -1,4 +1,4 @@
-package com.alibou.book.common;
+package uz.etc.etcfitness.common;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

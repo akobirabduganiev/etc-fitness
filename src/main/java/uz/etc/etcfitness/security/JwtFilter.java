@@ -1,4 +1,4 @@
-package com.alibou.book.security;
+package uz.etc.etcfitness.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

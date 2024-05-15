@@ -1,4 +1,4 @@
-package com.alibou.book.common;
+package uz.etc.etcfitness.common;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
