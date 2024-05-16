@@ -12,9 +12,10 @@ import uz.etc.etcfitness.user.UserRepository;
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
     private final UserRepository repository;
+
     @Override
     @Transactional
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) {
         return repository.findByPhone(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }

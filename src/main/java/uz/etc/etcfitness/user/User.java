@@ -12,10 +12,10 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import uz.etc.etcfitness.enums.Gender;
 import uz.etc.etcfitness.role.Role;
 
 import java.security.Principal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
@@ -39,10 +39,14 @@ public class User implements UserDetails, Principal {
     private Integer id;
     private String firstname;
     private String lastname;
-    private LocalDate dateOfBirth;
     @Column(unique = true)
     private String phone;
     private String password;
+    @Column(unique = true)
+    private Long telegramId;
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+    private boolean isDeleted = false;
     private boolean accountLocked;
     private boolean enabled;
     @ManyToMany(fetch = EAGER)
@@ -50,11 +54,11 @@ public class User implements UserDetails, Principal {
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
-    private LocalDateTime createdDate;
+    private LocalDateTime createdAt;
 
     @LastModifiedDate
     @Column(insertable = false)
-    private LocalDateTime lastModifiedDate;
+    private LocalDateTime updatedAt;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -97,6 +101,7 @@ public class User implements UserDetails, Principal {
     public String getFullName() {
         return getFirstname() + " " + getLastname();
     }
+
     @Override
     public String getName() {
         return phone;

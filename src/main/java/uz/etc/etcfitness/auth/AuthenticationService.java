@@ -29,13 +29,13 @@ public class AuthenticationService {
 
     public void register(RegistrationRequest request) {
         var userRole = roleRepository.findByName("USER")
-                // todo - better exception handling
                 .orElseThrow(() -> new IllegalStateException("ROLE USER was not initiated"));
         var user = User.builder()
                 .firstname(request.getFirstname())
                 .lastname(request.getLastname())
                 .phone(request.getPhone())
-                .password(passwordEncoder.encode(request.getPassword()))
+                .password(passwordEncoder.encode(passwordGenerator()))
+                .gender(request.getGender())
                 .accountLocked(false)
                 .enabled(false)
                 .roles(List.of(userRole))
@@ -46,7 +46,7 @@ public class AuthenticationService {
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         var auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
+                        request.getPhone(),
                         request.getPassword()
                 )
         );
@@ -61,6 +61,15 @@ public class AuthenticationService {
                 .build();
     }
 
+    private String passwordGenerator() {
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        StringBuilder password = new StringBuilder();
+        for (int i = 0; i < 8; i++) {
+            int index = (int) (characters.length() * Math.random());
+            password.append(characters.charAt(index));
+        }
+        return password.toString();
+    }
 /*    @Transactional
     public void activateAccount(String token){
         Token savedToken = tokenRepository.findByToken(token)
