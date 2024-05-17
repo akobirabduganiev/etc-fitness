@@ -13,6 +13,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import uz.etc.etcfitness.enums.Gender;
+import uz.etc.etcfitness.enums.UserStatus;
 import uz.etc.etcfitness.role.Role;
 
 import java.security.Principal;
@@ -35,8 +36,8 @@ import static jakarta.persistence.FetchType.EAGER;
 public class User implements UserDetails, Principal {
 
     @Id
-    @GeneratedValue
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String firstname;
     private String lastname;
     @Column(unique = true)
@@ -49,6 +50,9 @@ public class User implements UserDetails, Principal {
     private boolean isDeleted = false;
     private boolean accountLocked;
     private boolean enabled;
+    private String profilePicture;
+    @Enumerated(EnumType.STRING)
+    private UserStatus status;
     @ManyToMany(fetch = EAGER)
     private List<Role> roles;
 
@@ -64,7 +68,7 @@ public class User implements UserDetails, Principal {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.roles
                 .stream()
-                .map(r -> new SimpleGrantedAuthority(r.getName()))
+                .map(r -> new SimpleGrantedAuthority(r.getName().toString()))
                 .collect(Collectors.toList());
     }
 

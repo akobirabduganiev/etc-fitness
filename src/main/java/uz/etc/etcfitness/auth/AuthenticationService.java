@@ -5,6 +5,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import uz.etc.etcfitness.enums.RoleName;
 import uz.etc.etcfitness.role.RoleRepository;
 import uz.etc.etcfitness.security.JwtService;
 import uz.etc.etcfitness.user.User;
@@ -28,7 +29,7 @@ public class AuthenticationService {
     private String activationUrl;*/
 
     public void register(RegistrationRequest request) {
-        var userRole = roleRepository.findByName("USER")
+        var userRole = roleRepository.findByName(RoleName.USER)
                 .orElseThrow(() -> new IllegalStateException("ROLE USER was not initiated"));
         var user = User.builder()
                 .firstname(request.getFirstname())
