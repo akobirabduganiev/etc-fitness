@@ -6,7 +6,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import uz.etc.etcfitness.bot.config.TelegramBotConfig;
 import uz.etc.etcfitness.enums.UserStatus;
-import uz.etc.etcfitness.user.User;
+import uz.etc.etcfitness.user.UserEntity;
 import uz.etc.etcfitness.user.UserRepository;
 
 @Service
@@ -20,7 +20,7 @@ public class MessageService {
         var sendMessage = new SendMessage();
         sendMessage.setChatId(message.getChatId());
         if (!present) {
-            User user = new User();
+            UserEntity user = new UserEntity();
             user.setTelegramId(message.getChatId());
             user.setEnabled(false);
             user.setStatus(UserStatus.WAITING);

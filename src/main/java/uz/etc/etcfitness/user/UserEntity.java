@@ -21,14 +21,12 @@ import java.util.stream.Collectors;
 
 import static jakarta.persistence.FetchType.EAGER;
 
-
 @Getter
 @Setter
 @Entity
 @Table(name = "users")
 @EntityListeners(AuditingEntityListener.class)
-public class User implements UserDetails, Principal {
-
+public class UserEntity implements UserDetails, Principal {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -104,5 +102,4 @@ public class User implements UserDetails, Principal {
     public String getName() {
         return phone;
     }
-
 }

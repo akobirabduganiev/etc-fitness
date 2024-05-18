@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import uz.etc.etcfitness.enums.RoleName;
 import uz.etc.etcfitness.role.Role;
 import uz.etc.etcfitness.role.RoleRepository;
-import uz.etc.etcfitness.user.User;
+import uz.etc.etcfitness.user.UserEntity;
 import uz.etc.etcfitness.user.UserRepository;
 
 import java.util.List;
@@ -46,7 +46,7 @@ public class SetupDataLoader implements CommandLineRunner {
             Role adminRole = roleRepository.findByName(RoleName.ADMIN)
                     .orElseThrow(() -> new RuntimeException("Admin Role not found"));
             // create an Admin User and set the password
-            var adminUser = new User();
+            var adminUser = new UserEntity();
             adminUser.setFirstname("Admin");
             adminUser.setLastname("Admin");
             adminUser.setPhone("998932158000");

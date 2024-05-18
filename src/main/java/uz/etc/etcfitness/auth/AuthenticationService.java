@@ -13,7 +13,7 @@ import uz.etc.etcfitness.enums.UserStatus;
 import uz.etc.etcfitness.exception.ItemNotFoundException;
 import uz.etc.etcfitness.role.RoleRepository;
 import uz.etc.etcfitness.security.JwtService;
-import uz.etc.etcfitness.user.User;
+import uz.etc.etcfitness.user.UserEntity;
 import uz.etc.etcfitness.user.UserRepository;
 
 import java.util.HashMap;
@@ -40,8 +40,11 @@ public class AuthenticationService {
 
         userRepository.findByPhone(request.getPhone())
                 .ifPresent(u -> {
-                    throw new IllegalStateException("Phone number already exists");
+                    if (!u.getId().equals(request.getId())) {
+                        throw new IllegalStateException("Phone number already exists");
+                    }
                 });
+
         user.setFirstname(request.getFirstname());
         user.setLastname(request.getLastname());
         user.setPhone(request.getPhone());
@@ -68,10 +71,10 @@ public class AuthenticationService {
         );
 
         var claims = new HashMap<String, Object>();
-        var user = ((User) auth.getPrincipal());
+        var user = ((UserEntity) auth.getPrincipal());
         claims.put("fullName", user.getFullName());
 
-        var jwtToken = jwtService.generateToken(claims, (User) auth.getPrincipal());
+        var jwtToken = jwtService.generateToken(claims, (UserEntity) auth.getPrincipal());
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .build();

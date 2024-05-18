@@ -4,7 +4,7 @@ import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import uz.etc.etcfitness.user.User;
+import uz.etc.etcfitness.user.UserEntity;
 
 import java.util.Optional;
 
@@ -19,7 +19,7 @@ public class ApplicationAuditAware implements AuditorAware<Long> {
             return Optional.empty();
         }
 
-        User userPrincipal = (User) authentication.getPrincipal();
+        UserEntity userPrincipal = (UserEntity) authentication.getPrincipal();
 
         return Optional.ofNullable(userPrincipal.getId());
     }
