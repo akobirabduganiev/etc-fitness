@@ -1,5 +1,6 @@
 package uz.etc.etcfitness.auth;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import uz.etc.etcfitness.bot.config.TelegramBotConfig;
 import uz.etc.etcfitness.enums.RoleName;
+import uz.etc.etcfitness.enums.UserStatus;
 import uz.etc.etcfitness.exception.ItemNotFoundException;
 import uz.etc.etcfitness.role.RoleRepository;
 import uz.etc.etcfitness.security.JwtService;
@@ -28,24 +30,34 @@ public class AuthenticationService {
     private final RoleRepository roleRepository;
     private final TelegramBotConfig telegramBotConfig;
 
+    @Transactional
     public void register(RegistrationRequest request) {
         var userRole = roleRepository.findByName(RoleName.USER)
                 .orElseThrow(() -> new IllegalStateException("ROLE USER was not initiated"));
-        var foundUser = userRepository.findById(request.getId())
+
+        var user = userRepository.findById(request.getId())
                 .orElseThrow(() -> new ItemNotFoundException("User not found"));
-        foundUser = User.builder()
-                .firstname(request.getFirstname())
-                .lastname(request.getLastname())
-                .phone(request.getPhone())
-                .password(passwordEncoder.encode(passwordGenerator()))
-                .gender(request.getGender())
-                .accountLocked(false)
-                .enabled(true)
-                .roles(List.of(userRole))
-                .build();
-        userRepository.save(foundUser);
-        sendGeneratedPassword(foundUser.getTelegramId(), foundUser.getPassword());
+
+        userRepository.findByPhone(request.getPhone())
+                .ifPresent(u -> {
+                    throw new IllegalStateException("Phone number already exists");
+                });
+        user.setFirstname(request.getFirstname());
+        user.setLastname(request.getLastname());
+        user.setPhone(request.getPhone());
+        user.setGender(request.getGender());
+        var generatedPassword = passwordGenerator();
+        user.setPassword(passwordEncoder.encode(generatedPassword));
+        user.setRoles(List.of(userRole));
+        user.setEnabled(true);
+        user.setAccountLocked(false);
+        user.setStatus(UserStatus.ACTIVE);
+
+
+        userRepository.save(user);
+        sendGeneratedPassword(user.getTelegramId(), generatedPassword);
     }
+
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         var auth = authenticationManager.authenticate(
@@ -77,8 +89,9 @@ public class AuthenticationService {
 
     private void sendGeneratedPassword(Long telegramId, String password) {
         var sendMessage = new SendMessage();
-        sendMessage.setChatId(telegramId.toString());
+        sendMessage.setChatId(telegramId);
         sendMessage.setText("Your password: " + password);
         telegramBotConfig.sendMsg(sendMessage);
     }
+
 }
