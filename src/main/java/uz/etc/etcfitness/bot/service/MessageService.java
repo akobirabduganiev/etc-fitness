@@ -31,6 +31,5 @@ public class MessageService {
         }
         sendMessage.setText("Siz allaqachon ro'yxatdan o'tgansiz");
         telegramBotConfig.sendMsg(sendMessage);
-
     }
 }

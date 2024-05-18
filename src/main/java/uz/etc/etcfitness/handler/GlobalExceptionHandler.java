@@ -9,6 +9,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import uz.etc.etcfitness.exception.ActivationTokenException;
+import uz.etc.etcfitness.exception.ItemNotFoundException;
 import uz.etc.etcfitness.exception.MessagingException;
 import uz.etc.etcfitness.exception.OperationNotPermittedException;
 
@@ -112,7 +113,16 @@ public class GlobalExceptionHandler {
                                 .build()
                 );
     }
-
+    @ExceptionHandler(ItemNotFoundException.class)
+    public ResponseEntity<ExceptionResponse> handleException(ItemNotFoundException exp) {
+        return ResponseEntity
+                .status(NOT_FOUND)
+                .body(
+                        ExceptionResponse.builder()
+                                .error(exp.getMessage())
+                                .build()
+                );
+    }
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionResponse> handleException(Exception exp) {
         return ResponseEntity

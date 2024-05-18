@@ -5,7 +5,10 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import uz.etc.etcfitness.bot.config.TelegramBotConfig;
 import uz.etc.etcfitness.enums.RoleName;
+import uz.etc.etcfitness.exception.ItemNotFoundException;
 import uz.etc.etcfitness.role.RoleRepository;
 import uz.etc.etcfitness.security.JwtService;
 import uz.etc.etcfitness.user.User;
@@ -23,25 +26,25 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final RoleRepository roleRepository;
-/*    private final TokenRepository tokenRepository;
-
-    @Value("${application.mailing.frontend.activation-url}")
-    private String activationUrl;*/
+    private final TelegramBotConfig telegramBotConfig;
 
     public void register(RegistrationRequest request) {
         var userRole = roleRepository.findByName(RoleName.USER)
                 .orElseThrow(() -> new IllegalStateException("ROLE USER was not initiated"));
-        var user = User.builder()
+        var foundUser = userRepository.findById(request.getId())
+                .orElseThrow(() -> new ItemNotFoundException("User not found"));
+        foundUser = User.builder()
                 .firstname(request.getFirstname())
                 .lastname(request.getLastname())
                 .phone(request.getPhone())
                 .password(passwordEncoder.encode(passwordGenerator()))
                 .gender(request.getGender())
                 .accountLocked(false)
-                .enabled(false)
+                .enabled(true)
                 .roles(List.of(userRole))
                 .build();
-        userRepository.save(user);
+        userRepository.save(foundUser);
+        sendGeneratedPassword(foundUser.getTelegramId(), foundUser.getPassword());
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
@@ -71,49 +74,11 @@ public class AuthenticationService {
         }
         return password.toString();
     }
-/*    @Transactional
-    public void activateAccount(String token){
-        Token savedToken = tokenRepository.findByToken(token)
-                // todo exception has to be defined
-                .orElseThrow(() -> new RuntimeException("Invalid token"));
-        if (LocalDateTime.now().isAfter(savedToken.getExpiresAt())) {
-            throw new RuntimeException("Activation token has expired. A new token has been send to the same email address");
-        }
 
-        var user = userRepository.findById(savedToken.getUser().getId())
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        user.setEnabled(true);
-        userRepository.save(user);
-
-        savedToken.setValidatedAt(LocalDateTime.now());
-        tokenRepository.save(savedToken);
-    }*/
-
-/*    private String generateAndSaveActivationToken(User user) {
-        // Generate a token
-        String generatedToken = generateActivationCode();
-        var token = Token.builder()
-                .token(generatedToken)
-                .createdAt(LocalDateTime.now())
-                .expiresAt(LocalDateTime.now().plusMinutes(15))
-                .user(user)
-                .build();
-        tokenRepository.save(token);
-
-        return generatedToken;
-    }*/
-
-/*    private String generateActivationCode() {
-        String characters = "0123456789";
-        StringBuilder codeBuilder = new StringBuilder();
-
-        SecureRandom secureRandom = new SecureRandom();
-
-        for (int i = 0; i < 6; i++) {
-            int randomIndex = secureRandom.nextInt(characters.length());
-            codeBuilder.append(characters.charAt(randomIndex));
-        }
-
-        return codeBuilder.toString();
-    }*/
+    private void sendGeneratedPassword(Long telegramId, String password) {
+        var sendMessage = new SendMessage();
+        sendMessage.setChatId(telegramId.toString());
+        sendMessage.setText("Your password: " + password);
+        telegramBotConfig.sendMsg(sendMessage);
+    }
 }
