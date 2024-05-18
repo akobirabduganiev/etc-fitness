@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import uz.etc.etcfitness.bot.config.TelegramBotConfig;
+import uz.etc.etcfitness.enums.UserStatus;
 import uz.etc.etcfitness.user.User;
 import uz.etc.etcfitness.user.UserRepository;
 
@@ -22,6 +23,7 @@ public class MessageService {
             User user = new User();
             user.setTelegramId(message.getChatId());
             user.setEnabled(false);
+            user.setStatus(UserStatus.WAITING);
             userRepository.save(user);
             sendMessage.setText("Murojaat qabul qilindi");
             telegramBotConfig.sendMsg(sendMessage);

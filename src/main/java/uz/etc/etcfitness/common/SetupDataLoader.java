@@ -50,6 +50,7 @@ public class SetupDataLoader implements CommandLineRunner {
             adminUser.setFirstname("Admin");
             adminUser.setLastname("Admin");
             adminUser.setPhone("998932158000");
+            adminUser.setEnabled(true);
             adminUser.setPassword(passwordEncoder.encode("admin_password")); // use encoded password
             adminUser.setRoles(List.of(adminRole));
             userRepository.save(adminUser);
