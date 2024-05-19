@@ -63,7 +63,7 @@ public class UserEntity implements UserDetails, Principal {
     private LocalDateTime updatedAt;
 
     @CreatedBy
-    @Column(nullable = false, updatable = false)
+    @Column(updatable = false)
     private Long createdBy;
 
     @LastModifiedBy

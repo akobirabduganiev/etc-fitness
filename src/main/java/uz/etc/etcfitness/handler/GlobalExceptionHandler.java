@@ -145,6 +145,9 @@ public class GlobalExceptionHandler {
                 .body(
                         ExceptionResponse.builder()
                                 .error(exp.getMessage())
+                                .errorCode(FORBIDDEN.value())
+                                .errorDescription(FORBIDDEN.getReasonPhrase())
+                                .timestamp(System.currentTimeMillis())
                                 .build()
                 );
     }
@@ -157,6 +160,8 @@ public class GlobalExceptionHandler {
                         ExceptionResponse.builder()
                                 .errorDescription("Internal error, please contact the admin")
                                 .error(exp.getMessage())
+                                .errorCode(INTERNAL_SERVER_ERROR.value())
+                                .timestamp(System.currentTimeMillis())
                                 .build()
                 );
     }
