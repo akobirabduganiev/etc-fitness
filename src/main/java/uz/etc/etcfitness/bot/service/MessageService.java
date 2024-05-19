@@ -6,8 +6,8 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import uz.etc.etcfitness.bot.config.TelegramBotConfig;
 import uz.etc.etcfitness.enums.UserStatus;
-import uz.etc.etcfitness.user.UserEntity;
-import uz.etc.etcfitness.user.UserRepository;
+import uz.etc.etcfitness.user.entity.UserEntity;
+import uz.etc.etcfitness.user.repository.UserRepository;
 
 @Service
 @RequiredArgsConstructor

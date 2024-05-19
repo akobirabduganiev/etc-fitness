@@ -1,6 +1,7 @@
-package uz.etc.etcfitness.user;
+package uz.etc.etcfitness.user.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import uz.etc.etcfitness.user.entity.UserEntity;
 
 import java.util.Optional;
 

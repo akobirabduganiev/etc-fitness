@@ -2,6 +2,7 @@ package uz.etc.etcfitness.handler;
 
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.LockedException;
@@ -28,9 +29,10 @@ public class GlobalExceptionHandler {
                 .status(UNAUTHORIZED)
                 .body(
                         ExceptionResponse.builder()
-                                .businessErrorCode(ACCOUNT_LOCKED.getCode())
-                                .businessErrorDescription(ACCOUNT_LOCKED.getDescription())
+                                .errorCode(ACCOUNT_LOCKED.getCode())
+                                .errorDescription(ACCOUNT_LOCKED.getDescription())
                                 .error(exp.getMessage())
+                                .timestamp(System.currentTimeMillis())
                                 .build()
                 );
     }
@@ -41,9 +43,10 @@ public class GlobalExceptionHandler {
                 .status(UNAUTHORIZED)
                 .body(
                         ExceptionResponse.builder()
-                                .businessErrorCode(ACCOUNT_DISABLED.getCode())
-                                .businessErrorDescription(ACCOUNT_DISABLED.getDescription())
+                                .errorCode(ACCOUNT_DISABLED.getCode())
+                                .errorDescription(ACCOUNT_DISABLED.getDescription())
                                 .error(exp.getMessage())
+                                .timestamp(System.currentTimeMillis())
                                 .build()
                 );
     }
@@ -55,9 +58,10 @@ public class GlobalExceptionHandler {
                 .status(UNAUTHORIZED)
                 .body(
                         ExceptionResponse.builder()
-                                .businessErrorCode(BAD_CREDENTIALS.getCode())
-                                .businessErrorDescription(BAD_CREDENTIALS.getDescription())
+                                .errorCode(BAD_CREDENTIALS.getCode())
+                                .errorDescription(BAD_CREDENTIALS.getDescription())
                                 .error("Login and / or Password is incorrect")
+                                .timestamp(System.currentTimeMillis())
                                 .build()
                 );
     }
@@ -69,6 +73,8 @@ public class GlobalExceptionHandler {
                 .body(
                         ExceptionResponse.builder()
                                 .error(exp.getMessage())
+                                .errorCode(INTERNAL_SERVER_ERROR.value())
+                                .timestamp(System.currentTimeMillis())
                                 .build()
                 );
     }
@@ -80,6 +86,8 @@ public class GlobalExceptionHandler {
                 .body(
                         ExceptionResponse.builder()
                                 .error(exp.getMessage())
+                                .errorCode(BAD_REQUEST.value())
+                                .timestamp(System.currentTimeMillis())
                                 .build()
                 );
     }
@@ -91,6 +99,8 @@ public class GlobalExceptionHandler {
                 .body(
                         ExceptionResponse.builder()
                                 .error(exp.getMessage())
+                                .errorCode(BAD_REQUEST.value())
+                                .timestamp(System.currentTimeMillis())
                                 .build()
                 );
     }
@@ -113,6 +123,7 @@ public class GlobalExceptionHandler {
                                 .build()
                 );
     }
+
     @ExceptionHandler(ItemNotFoundException.class)
     public ResponseEntity<ExceptionResponse> handleException(ItemNotFoundException exp) {
         return ResponseEntity
@@ -120,16 +131,31 @@ public class GlobalExceptionHandler {
                 .body(
                         ExceptionResponse.builder()
                                 .error(exp.getMessage())
+                                .errorCode(NOT_FOUND.value())
+                                .errorDescription(NOT_FOUND.getReasonPhrase())
+                                .timestamp(System.currentTimeMillis())
                                 .build()
                 );
     }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ExceptionResponse> handleException(AccessDeniedException exp) {
+        return ResponseEntity
+                .status(FORBIDDEN)
+                .body(
+                        ExceptionResponse.builder()
+                                .error(exp.getMessage())
+                                .build()
+                );
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionResponse> handleException(Exception exp) {
         return ResponseEntity
                 .status(INTERNAL_SERVER_ERROR)
                 .body(
                         ExceptionResponse.builder()
-                                .businessErrorDescription("Internal error, please contact the admin")
+                                .errorDescription("Internal error, please contact the admin")
                                 .error(exp.getMessage())
                                 .build()
                 );

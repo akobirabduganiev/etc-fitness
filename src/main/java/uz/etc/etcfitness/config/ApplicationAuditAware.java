@@ -4,7 +4,7 @@ import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import uz.etc.etcfitness.user.UserEntity;
+import uz.etc.etcfitness.user.entity.UserEntity;
 
 import java.util.Optional;
 

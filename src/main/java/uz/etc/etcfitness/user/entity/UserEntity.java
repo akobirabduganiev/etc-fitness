@@ -1,9 +1,13 @@
-package uz.etc.etcfitness.user;
+package uz.etc.etcfitness.user.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
+import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
@@ -24,6 +28,8 @@ import static jakarta.persistence.FetchType.EAGER;
 @Getter
 @Setter
 @Entity
+@RequiredArgsConstructor
+@SuperBuilder
 @Table(name = "users")
 @EntityListeners(AuditingEntityListener.class)
 public class UserEntity implements UserDetails, Principal {
@@ -55,6 +61,14 @@ public class UserEntity implements UserDetails, Principal {
     @LastModifiedDate
     @Column(insertable = false)
     private LocalDateTime updatedAt;
+
+    @CreatedBy
+    @Column(nullable = false, updatable = false)
+    private Long createdBy;
+
+    @LastModifiedBy
+    @Column(insertable = false)
+    private Long modifiedBy;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

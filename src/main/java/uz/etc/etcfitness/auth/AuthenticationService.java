@@ -1,6 +1,5 @@
 package uz.etc.etcfitness.auth;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -13,9 +12,10 @@ import uz.etc.etcfitness.enums.UserStatus;
 import uz.etc.etcfitness.exception.ItemNotFoundException;
 import uz.etc.etcfitness.role.RoleRepository;
 import uz.etc.etcfitness.security.JwtService;
-import uz.etc.etcfitness.user.UserEntity;
-import uz.etc.etcfitness.user.UserRepository;
+import uz.etc.etcfitness.user.entity.UserEntity;
+import uz.etc.etcfitness.user.repository.UserRepository;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -30,7 +30,6 @@ public class AuthenticationService {
     private final RoleRepository roleRepository;
     private final TelegramBotConfig telegramBotConfig;
 
-    @Transactional
     public void register(RegistrationRequest request) {
         var userRole = roleRepository.findByName(RoleName.USER)
                 .orElseThrow(() -> new IllegalStateException("ROLE USER was not initiated"));
@@ -51,11 +50,10 @@ public class AuthenticationService {
         user.setGender(request.getGender());
         var generatedPassword = passwordGenerator();
         user.setPassword(passwordEncoder.encode(generatedPassword));
-        user.setRoles(List.of(userRole));
+        user.setRoles(new ArrayList<>(List.of(userRole)));
         user.setEnabled(true);
         user.setAccountLocked(false);
         user.setStatus(UserStatus.ACTIVE);
-
 
         userRepository.save(user);
         sendGeneratedPassword(user.getTelegramId(), generatedPassword);

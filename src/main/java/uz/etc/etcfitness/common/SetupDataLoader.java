@@ -7,8 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 import uz.etc.etcfitness.enums.RoleName;
 import uz.etc.etcfitness.role.Role;
 import uz.etc.etcfitness.role.RoleRepository;
-import uz.etc.etcfitness.user.UserEntity;
-import uz.etc.etcfitness.user.UserRepository;
+import uz.etc.etcfitness.user.entity.UserEntity;
+import uz.etc.etcfitness.user.repository.UserRepository;
 
 import java.util.List;
 
