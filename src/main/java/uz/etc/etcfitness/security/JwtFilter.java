@@ -3,7 +3,6 @@ package uz.etc.etcfitness.security;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -14,9 +13,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -29,10 +31,35 @@ public class JwtFilter extends OncePerRequestFilter {
             @NonNull HttpServletRequest request,
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain
-    ) throws IOException, ServletException {
+    ) throws IOException {
         response.setContentType("application/json");
+        AntPathMatcher pathMatcher = new AntPathMatcher();
+        List<String> whiteListedUrlList = Arrays.asList(
+                "/api/v1/auth/authenticate",
+                "/api/v1/auth/refresh-token",
+                "/actuator/**",
+                "/v2/api-docs",
+                "/v3/api-docs",
+                "/v3/api-docs/**",
+                "/swagger-resources",
+                "/swagger-resources/**",
+                "/configuration/ui",
+                "/configuration/security",
+                "/webjars/**",
+                "/swagger-ui.html",
+                "/swagger-ui/**"
+                );
+
         try {
+
+            String path = request.getServletPath();
+
+            if (whiteListedUrlList.stream().anyMatch(whiteUrl -> pathMatcher.match(whiteUrl, path))) {
+                filterChain.doFilter(request, response);
+                return;
+            }
             if (request.getServletPath().contains("/api/v1/auth")) {
+                response.setStatus(HttpServletResponse.SC_OK);
                 filterChain.doFilter(request, response);
                 return;
             }
