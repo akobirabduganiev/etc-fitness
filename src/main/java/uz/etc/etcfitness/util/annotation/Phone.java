@@ -1,7 +1,8 @@
-package uz.etc.etcfitness.util;
+package uz.etc.etcfitness.util.annotation;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
+import uz.etc.etcfitness.util.PhoneValidator;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

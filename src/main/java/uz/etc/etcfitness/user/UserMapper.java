@@ -14,21 +14,14 @@ public class UserMapper {
                 .lastname(userEntity.getLastname())
                 .phone(userEntity.getPhone())
                 .status(userEntity.getStatus())
+                .roles(userEntity.getRoles())
+                .telegramId(userEntity.getTelegramId())
+                .gender(userEntity.getGender())
+                .profilePicture(userEntity.getProfilePicture())
                 .createdAt(userEntity.getCreatedAt())
                 .updatedAt(userEntity.getUpdatedAt())
 
                 .build();
     }
 
-    public UserEntity toUserEntity(UserDto userDto) {
-        return UserEntity.builder()
-                .id(userDto.id())
-                .firstname(userDto.firstname())
-                .lastname(userDto.lastname())
-                .phone(userDto.phone())
-                .status(userDto.status())
-                .createdAt(userDto.createdAt())
-                .updatedAt(userDto.updatedAt())
-                .build();
-    }
 }

@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import uz.etc.etcfitness.enums.Gender;
-import uz.etc.etcfitness.util.Phone;
+import uz.etc.etcfitness.util.annotation.Phone;
 
 @Getter
 @Setter

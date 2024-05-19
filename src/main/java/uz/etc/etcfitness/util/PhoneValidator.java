@@ -2,6 +2,7 @@ package uz.etc.etcfitness.util;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
+import uz.etc.etcfitness.util.annotation.Phone;
 
 import java.util.regex.Pattern;
 
