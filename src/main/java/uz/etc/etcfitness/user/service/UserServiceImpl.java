@@ -5,14 +5,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import uz.etc.etcfitness.common.PageResponse;
 import uz.etc.etcfitness.enums.UserStatus;
 import uz.etc.etcfitness.exception.ItemNotFoundException;
 import uz.etc.etcfitness.user.UserMapper;
 import uz.etc.etcfitness.user.dto.UserDto;
-import uz.etc.etcfitness.user.entity.UserEntity;
+import uz.etc.etcfitness.user.entity.User;
 import uz.etc.etcfitness.user.repository.UserRepository;
 
 import java.util.List;
@@ -26,7 +25,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public PageResponse<UserDto> getAllWatingStatusUsers(int page, int size) {
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by("createdAt").descending());
-        Page<UserEntity> users = userRepository.findAllByStatus(pageable, UserStatus.WAITING);
+        Page<User> users = userRepository.findAllByStatus(pageable, UserStatus.WAITING);
         List<UserDto> usersResponse = users.stream()
                 .map(userMapper::toUserDto)
                 .toList();
@@ -51,7 +50,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public PageResponse<UserDto> getAllUsers(int page, int size) {
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by("createdAt").descending());
-        Page<UserEntity> users = userRepository.findAll(pageable);
+        Page<User> users = userRepository.findAll(pageable);
         List<UserDto> usersResponse = users.stream()
                 .map(userMapper::toUserDto)
                 .toList();
@@ -69,7 +68,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public PageResponse<UserDto> getAllUsersByStatus(int page, int size, UserStatus status) {
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by("createdAt").descending());
-        Page<UserEntity> users = userRepository.findAllByStatus(pageable, status);
+        Page<User> users = userRepository.findAllByStatus(pageable, status);
         List<UserDto> usersResponse = users.stream()
                 .map(userMapper::toUserDto)
                 .toList();

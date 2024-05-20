@@ -5,13 +5,14 @@ import lombok.Builder;
 import uz.etc.etcfitness.enums.Gender;
 import uz.etc.etcfitness.enums.UserStatus;
 import uz.etc.etcfitness.role.Role;
+import uz.etc.etcfitness.user.entity.User;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * DTO for {@link uz.etc.etcfitness.user.entity.UserEntity}
+ * DTO for {@link User}
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Builder

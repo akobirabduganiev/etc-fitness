@@ -12,7 +12,7 @@ import uz.etc.etcfitness.enums.UserStatus;
 import uz.etc.etcfitness.exception.ItemNotFoundException;
 import uz.etc.etcfitness.role.RoleRepository;
 import uz.etc.etcfitness.security.JwtService;
-import uz.etc.etcfitness.user.entity.UserEntity;
+import uz.etc.etcfitness.user.entity.User;
 import uz.etc.etcfitness.user.repository.UserRepository;
 
 import java.util.ArrayList;
@@ -69,10 +69,10 @@ public class AuthenticationService {
         );
 
         var claims = new HashMap<String, Object>();
-        var user = ((UserEntity) auth.getPrincipal());
+        var user = ((User) auth.getPrincipal());
         claims.put("fullName", user.getFullName());
 
-        var jwtToken = jwtService.generateToken(claims, (UserEntity) auth.getPrincipal());
+        var jwtToken = jwtService.generateToken(claims, (User) auth.getPrincipal());
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .build();

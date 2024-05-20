@@ -9,7 +9,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import uz.etc.etcfitness.enums.RoleName;
-import uz.etc.etcfitness.user.entity.UserEntity;
+import uz.etc.etcfitness.user.entity.User;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -33,7 +33,7 @@ public class Role {
     private RoleName name;
     @ManyToMany(mappedBy = "roles")
     @JsonIgnore
-    private List<UserEntity> user;
+    private List<User> user;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)

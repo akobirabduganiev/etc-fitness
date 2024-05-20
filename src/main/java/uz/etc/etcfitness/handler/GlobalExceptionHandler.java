@@ -138,6 +138,20 @@ public class GlobalExceptionHandler {
                 );
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ExceptionResponse> handleException(IllegalArgumentException exp) {
+        return ResponseEntity
+                .status(BAD_REQUEST)
+                .body(
+                        ExceptionResponse.builder()
+                                .error(exp.getMessage())
+                                .errorCode(BAD_REQUEST.value())
+                                .errorDescription(BAD_REQUEST.getReasonPhrase())
+                                .timestamp(System.currentTimeMillis())
+                                .build()
+                );
+    }
+
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ExceptionResponse> handleException(AccessDeniedException exp) {
         return ResponseEntity

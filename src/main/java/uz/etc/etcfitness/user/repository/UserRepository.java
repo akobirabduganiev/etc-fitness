@@ -5,15 +5,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import uz.etc.etcfitness.enums.UserStatus;
-import uz.etc.etcfitness.user.entity.UserEntity;
+import uz.etc.etcfitness.user.entity.User;
 
 import java.util.Optional;
 
-public interface UserRepository extends JpaRepository<UserEntity, Long> {
-    Optional<UserEntity> findByTelegramId(Long telegramId);
+public interface UserRepository extends JpaRepository<User, Long> {
+    Optional<User> findByTelegramId(Long telegramId);
 
-    Optional<UserEntity> findByPhone(String username);
+    Optional<User> findByPhone(String username);
 
-    @Query("select u from UserEntity u where u.status = :userStatus")
-    Page<UserEntity> findAllByStatus(Pageable pageable, UserStatus userStatus);
+    @Query("select u from User u where u.status = :userStatus")
+    Page<User> findAllByStatus(Pageable pageable, UserStatus userStatus);
 }

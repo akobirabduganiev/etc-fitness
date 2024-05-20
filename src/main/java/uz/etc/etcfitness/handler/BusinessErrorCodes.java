@@ -14,7 +14,8 @@ public enum BusinessErrorCodes {
     ACCOUNT_DISABLED(303, FORBIDDEN, "User account is disabled"),
     BAD_CREDENTIALS(304, FORBIDDEN, "Login and / or Password is incorrect"),
     USER_NOT_FOUND(305, NOT_FOUND, "User not found"),
-    ;
+    USER_ALREADY_EXISTS(306, CONFLICT, "User already exists"),;
+
 
     private final int code;
     private final String description;

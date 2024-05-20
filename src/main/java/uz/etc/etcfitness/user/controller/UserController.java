@@ -40,4 +40,5 @@ public class UserController {
     public ResponseEntity<UserDto> getUserById(Long id) {
         return ResponseEntity.ok(userService.getUserById(id));
     }
+
 }
