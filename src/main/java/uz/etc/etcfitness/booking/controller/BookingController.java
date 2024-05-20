@@ -3,6 +3,7 @@ package uz.etc.etcfitness.booking.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import uz.etc.etcfitness.booking.dto.BookingDto;
 import uz.etc.etcfitness.booking.dto.request.BookingCreateRequest;
@@ -25,13 +26,14 @@ public class BookingController {
     }
 
     @GetMapping("/get")
-    public ResponseEntity<BookingDto> getBookingById(@RequestParam Long bookingId) {
-        return ResponseEntity.ok(bookingService.getBookingById(bookingId));
+    public ResponseEntity<BookingDto> getBookingById(@RequestParam Long bookingId, Authentication connectedUser) {
+        return ResponseEntity.ok(bookingService.getBookingById(bookingId,connectedUser));
     }
 
     @GetMapping("/get-all")
-    public ResponseEntity<PageResponse<BookingDto>> getAllBookings(@RequestParam int page, @RequestParam int size) {
-        return ResponseEntity.ok(bookingService.getAll(page, size));
+    public ResponseEntity<PageResponse<BookingDto>> getAllBookings(@RequestParam int page, @RequestParam int size,
+                                                                   Authentication connectedUser) {
+        return ResponseEntity.ok(bookingService.getAll(page, size, connectedUser));
     }
 
     @GetMapping("/get-by-user")

@@ -14,5 +14,9 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Query("SELECT b FROM Booking b WHERE b.startTime BETWEEN :startTime AND :endTime AND b.status = 'ACCEPTED'")
     List<Booking> findBookingsInTimeRange(@Param("startTime") LocalDateTime startTime, @Param("endTime") LocalDateTime endTime);
 
+    @Query("SELECT b FROM Booking b WHERE b.user.id = :userId")
     Page<Booking> findBookingsByUserId(Long userId, Pageable pageable);
+
+    @Query("SELECT b FROM Booking b WHERE b.user.id = :userId")
+    Page<Booking> findAllByUserId(Long userId, Pageable pageable);
 }

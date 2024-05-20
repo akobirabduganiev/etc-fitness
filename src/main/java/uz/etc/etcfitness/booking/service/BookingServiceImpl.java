@@ -1,9 +1,12 @@
 package uz.etc.etcfitness.booking.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import uz.etc.etcfitness.booking.dto.BookingDto;
 import uz.etc.etcfitness.booking.dto.request.BookingCreateRequest;
@@ -13,7 +16,9 @@ import uz.etc.etcfitness.booking.repository.BookingRepository;
 import uz.etc.etcfitness.common.PageResponse;
 import uz.etc.etcfitness.common.ResponseMessage;
 import uz.etc.etcfitness.enums.BookingStatus;
+import uz.etc.etcfitness.enums.RoleName;
 import uz.etc.etcfitness.exception.ItemNotFoundException;
+import uz.etc.etcfitness.user.entity.User;
 import uz.etc.etcfitness.user.repository.UserRepository;
 
 import java.time.DayOfWeek;
@@ -52,27 +57,32 @@ public class BookingServiceImpl implements BookingService {
         return bookingMapper.toBookingDto(newBooking);
     }
 
-
     @Override
-    public BookingDto getBookingById(Long bookingId) {
-        var booking = bookingRepository.findById(bookingId).
-                orElseThrow(() -> new ItemNotFoundException("Booking not found"));
+    public BookingDto getBookingById(Long bookingId, Authentication connectedUser) {
+        User user = ((User) connectedUser.getPrincipal());
+        var booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new ItemNotFoundException("Booking not found"));
+
+        if (!user.getRoles().stream().anyMatch(role -> role.getName().equals(RoleName.ADMIN)) && !booking.getUser().getId().equals(user.getId())) {
+            throw new AccessDeniedException("Access denied");
+        }
+
         return bookingMapper.toBookingDto(booking);
     }
 
     @Override
-    public ResponseMessage changeBookingStatus(Long bookingId, BookingStatus status) {
-        var booking = bookingRepository.findById(bookingId).
-                orElseThrow(() -> new ItemNotFoundException("Booking not found"));
-        booking.setStatus(status);
-        bookingRepository.save(booking);
-        return new ResponseMessage("Booking status changed");
-    }
-
-    @Override
-    public PageResponse<BookingDto> getAll(int page, int size) {
+    public PageResponse<BookingDto> getAll(int page, int size, Authentication connectedUser) {
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by("createdAt").descending());
-        var bookings = bookingRepository.findAll(pageable);
+
+        User user = ((User) connectedUser.getPrincipal());
+        Page<Booking> bookings;
+
+        if (user.getRoles().stream().anyMatch(role -> role.getName().equals(RoleName.ADMIN))) {
+            bookings = bookingRepository.findAll(pageable);
+        } else {
+            bookings = bookingRepository.findAllByUserId(user.getId(), pageable);
+        }
+
         return new PageResponse<>(
                 bookingMapper.toBookingDtoList(bookings.getContent()),
                 bookings.getNumber() + 1,
@@ -83,6 +93,17 @@ public class BookingServiceImpl implements BookingService {
                 bookings.isLast()
         );
     }
+
+
+    @Override
+    public ResponseMessage changeBookingStatus(Long bookingId, BookingStatus status) {
+        var booking = bookingRepository.findById(bookingId).
+                orElseThrow(() -> new ItemNotFoundException("Booking not found"));
+        booking.setStatus(status);
+        bookingRepository.save(booking);
+        return new ResponseMessage("Booking status changed");
+    }
+
 
     @Override
     public List<BookingDto> findBookingsInTimeRange(LocalDateTime startTime, LocalDateTime endTime) {
