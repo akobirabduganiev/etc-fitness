@@ -2,6 +2,7 @@ package uz.etc.etcfitness.booking.service;
 
 import org.springframework.security.core.Authentication;
 import uz.etc.etcfitness.booking.dto.BookingDto;
+import uz.etc.etcfitness.booking.dto.SlotInfo;
 import uz.etc.etcfitness.booking.dto.request.BookingCreateRequest;
 import uz.etc.etcfitness.common.PageResponse;
 import uz.etc.etcfitness.common.ResponseMessage;
@@ -25,5 +26,5 @@ public interface BookingService {
     List<BookingDto> findBookingsInTimeRange(LocalDateTime startTime, LocalDateTime endTime);
 
 
-    List<LocalDateTime> getAvailableSlots(LocalDate date);
+    List<SlotInfo> getAvailableSlots(LocalDate date);
 }
