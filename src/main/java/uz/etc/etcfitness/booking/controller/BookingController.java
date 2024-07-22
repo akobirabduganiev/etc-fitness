@@ -2,6 +2,7 @@ package uz.etc.etcfitness.booking.controller;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Future;
+import jakarta.ws.rs.DefaultValue;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,6 +16,7 @@ import uz.etc.etcfitness.common.PageResponse;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api/v1/booking")
@@ -28,8 +30,9 @@ public class BookingController {
     }
 
     @GetMapping("/available-slots")
-    public List<SlotInfo> getAvailableSlots(@RequestParam LocalDate date) {
-        return bookingService.getAvailableSlots(date);
+    public List<SlotInfo> getAvailableSlots(@RequestParam Optional<LocalDate> date) {
+        LocalDate dateValue = date.orElse(LocalDate.now());
+        return bookingService.getAvailableSlots(dateValue);
     }
 
     @GetMapping("/get")

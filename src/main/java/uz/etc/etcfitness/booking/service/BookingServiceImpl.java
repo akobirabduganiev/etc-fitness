@@ -126,7 +126,7 @@ public class BookingServiceImpl implements BookingService {
     public List<BookingDto> findBookingsInTimeRange(LocalDateTime startTime, LocalDateTime endTime) {
         return bookingMapper.toBookingDtoList(bookingRepository.findBookingsInTimeRange(startTime, endTime));
     }
-
+    int count = 0;
     @Override
     public List<SlotInfo> getAvailableSlots(LocalDate date) {
         if (date.getDayOfWeek().getValue() == 7) {
@@ -158,6 +158,7 @@ public class BookingServiceImpl implements BookingService {
                 }
             }
         }
+        System.out.println("method called:" + count++);
         return availableSlots;
     }
 
