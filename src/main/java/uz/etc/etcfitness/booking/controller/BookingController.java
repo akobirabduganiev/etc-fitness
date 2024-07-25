@@ -41,7 +41,7 @@ public class BookingController {
     }
 
     @GetMapping("/get-all")
-    public ResponseEntity<PageResponse<BookingDto>> getAllBookings(@RequestParam int page, @RequestParam int size,
+    public ResponseEntity<PageResponse<BookingDto>> getAllBookings(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "20") int size,
                                                                    Authentication connectedUser) {
         return ResponseEntity.ok(bookingService.getAll(page, size, connectedUser));
     }
